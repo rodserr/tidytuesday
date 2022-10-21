@@ -8,6 +8,14 @@ library(colorspace)
 
 dial <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-10-18/stranger_things_all_dialogue.csv')
 
+# Fonts
+font_add_google("Libre Baskerville", "lb")
+showtext_auto()
+ft1 <- "lb"
+tc <- darken("tomato", .3)
+
+
+# Sentiments
 sent <- dial %>% 
   select(season, episode, dialogue) %>% 
   tidytext::unnest_tokens('word', dialogue) %>% 
@@ -23,6 +31,7 @@ sent <- dial %>%
     lead_sentiment = lead(sentiment)
   )
 
+# Paint candle individually by season, due to color mapping impossibility
 paint_candle <- function(.season, .color = "red"){
   with_outer_glow(
     expand = 10, colour = .color, sigma = 21,
@@ -30,28 +39,19 @@ paint_candle <- function(.season, .color = "red"){
       expand = 10, colour = .color, sigma = 21,
       geom_image(
         data = sent %>% filter(season == .season), 
-        image='2022/candle.png',
+        image='2022//w42-strangerthings/candle.png',
         nudge_y = -14
       )
     )
   )
 }
 
-font_add_google("Heebo", "heebo")
-font_add_google("Libre Baskerville", "lb")
-showtext_auto()
-ft <- "heebo"
-ft1 <- "lb"
-tc <- darken("tomato", .3)
-
 sent %>%
-  # filter(season == 1) %>%
   ggplot(aes(y = sentiment, x = episode)) +
   paint_candle(1, 'darkgreen') +
   paint_candle(2, 'skyblue') +
   paint_candle(3, 'gold') +
   paint_candle(4, 'tomato') +
-  # geom_point(aes(color = as.factor(season))) +
   geom_curve(
     aes(x = episode, y = sentiment, xend = lead_episode, yend = lead_sentiment, color = as.factor(season))
   ) +
@@ -63,7 +63,7 @@ sent %>%
   theme_void() +
   ylim(-530, NA) +
   labs(
-    title = "<img src='2022/stranger_things_logo.png' height = 180>",
+    title = "<img src='2022/w42-strangerthings/stranger_things_logo.png' height = 180>",
     x = 'Episodes',
     color = 'Seasons',
     caption = '@rodserrr | Source: 8flix.com | #tidytuesday',
@@ -82,6 +82,7 @@ sent %>%
     axis.title.x = element_text(margin = margin(t = 10), lineheight = 0.3),
   )
 
-ggsave('2022/w42-strangerthings/w42.png', dpi = 320, width = 12, height = 14)
+# Not really working, I used plot viewer export
+# ggsave('2022/w42-strangerthings/w42.png', dpi = 320, width = 12, height = 14)
 
 
