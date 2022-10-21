@@ -37,29 +37,3 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
-
-# Files
-*.xlsx
-*.pdf
-*.csv
-*.json
-*.mp4
-*.html
-*.jpg
-*.jpeg
-*.png
-*.docx
-*.txt
-*.zip
-*.shp
-*.geojson
-*.MOV
-
-!md_formats/encabezado.jpg
-
-# Hide evaluations
-.secrets/
-data/
-
-# Hide shinyapps.io
-rsconnect/
